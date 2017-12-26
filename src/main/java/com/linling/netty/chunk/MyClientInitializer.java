@@ -8,6 +8,7 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 
 import java.nio.ByteOrder;
@@ -18,14 +19,14 @@ public class MyClientInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addFirst("idleStateHandler", new MyIdleStateHandler(9, 1, 11, TimeUnit.SECONDS));
-        pipeline.addLast(new LengthFieldBasedFrameDecoder(ByteOrder.LITTLE_ENDIAN, Integer.MAX_VALUE,
+        pipeline.addFirst("idleStateHandler", new IdleStateHandler(9, 1, 11, TimeUnit.SECONDS));
+        pipeline.addLast("lengthFieldBasedFrameDecoder", new LengthFieldBasedFrameDecoder(ByteOrder.LITTLE_ENDIAN, Integer.MAX_VALUE,
                 0, 4, 0, 4, true));
-        pipeline.addLast(new LengthFieldPrepender(ByteOrder.LITTLE_ENDIAN, 4, 0, false));
+        pipeline.addLast("lengthFieldPrepender", new LengthFieldPrepender(ByteOrder.LITTLE_ENDIAN, 4, 0, false));
         pipeline.addLast("chunkedWriteHandler", new ChunkedWriteHandler());
         pipeline.addLast("myClientChunkHandler", new MyClientChunkHandler());
-        pipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
-        pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
-        pipeline.addLast(new MyClientHandler());
+        pipeline.addLast("stringEncoder", new StringEncoder(CharsetUtil.UTF_8));
+        pipeline.addLast("stringDecoder", new StringDecoder(CharsetUtil.UTF_8));
+        pipeline.addLast("myClientHandler", new MyClientHandler());
     }
 }

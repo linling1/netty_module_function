@@ -52,7 +52,7 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String> {
             @Override
             public void operationComplete(Future<? super Void> future) throws Exception {
                 System.out.println("send completed");
-//                sendData(ctx);
+                sendData(ctx);
             }
         });
 

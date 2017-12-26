@@ -8,6 +8,9 @@ import io.netty.handler.timeout.IdleStateHandler;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * copy的一份IdleStateHandler，方便打印日志、调试。。。
+ */
 public class MyIdleStateHandler extends ChannelDuplexHandler {
     private static final long MIN_TIMEOUT_NANOS = TimeUnit.MILLISECONDS.toNanos(1);
 
