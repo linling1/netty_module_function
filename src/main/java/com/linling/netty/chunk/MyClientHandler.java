@@ -51,14 +51,18 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String> {
         promise.addListener(new GenericFutureListener<Future<? super Void>>() {
             @Override
             public void operationComplete(Future<? super Void> future) throws Exception {
-                System.out.println("send completed");
+                System.out.println("send completed. isSuccess : " + future.isSuccess());
+                if(!future.isSuccess()) {
+                    future.cause().printStackTrace();
+                }
+                System.out.println("Time elapse:" + (System.currentTimeMillis() - tickCount));
                 sendData(ctx);
             }
         });
 
 
 
-        System.out.println("Time elapse:" + (System.currentTimeMillis() - tickCount));
+
     }
 
     @Override
