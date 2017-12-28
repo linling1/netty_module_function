@@ -1,6 +1,5 @@
 package com.linling.netty.trafficshaping;
 
-import com.linling.netty.trafficshaping.oom.MyServerInitializerForSolveOOM;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -21,7 +20,7 @@ public class MyServer {
 
         try {
             ServerBootstrap server = new ServerBootstrap();
-            server.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new MyServerInitializerForSolveOOM());
+            server.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new MyServerInitializer());
 
             server.childOption(WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(30 * M, 50 * M));
 

@@ -15,6 +15,7 @@ public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<
     protected AtomicLong consumeMsgLength;
     protected Runnable counterTask;
     private long priorProgress;
+    protected boolean sentFlag;
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
@@ -28,7 +29,7 @@ public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<
               }
 
               long length = consumeMsgLength.getAndSet(0);
-              System.out.println("*** rate（M/S）：" + (length / M));
+              System.out.println("*** rate（KB/S）：" + (length));
           }
         };
         StringBuilder builder = new StringBuilder();
@@ -56,6 +57,7 @@ public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<
 
             @Override
             public void operationComplete(ChannelProgressiveFuture future) throws Exception {
+                sentFlag = false;
                 if(future.isSuccess()){
                     System.out.println("成功发送完成！");
                     priorProgress -= 26 * M;
@@ -78,11 +80,12 @@ public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        if(evt instanceof IdleStateEvent) {
+        /*if(evt instanceof IdleStateEvent) {
             if(((IdleStateEvent) evt).state() == IdleState.WRITER_IDLE) {
                 System.out.println("##### WRITER_IDLE #####");
             }
-        }
+        }*/
+
         super.userEventTriggered(ctx, evt);
     }
 
@@ -91,4 +94,5 @@ public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<
         cause.printStackTrace();
         ctx.channel().close();
     }
+
 }

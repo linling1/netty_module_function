@@ -20,13 +20,18 @@ public class MyServerInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
+
+        GlobalTrafficShapingHandler globalTrafficShapingHandler = new GlobalTrafficShapingHandler(ch.eventLoop().parent(), 5 * M, 50 * M);
+//        globalTrafficShapingHandler.setMaxGlobalWriteSize(50 * M);
+//        globalTrafficShapingHandler.setMaxWriteSize(30 * M);
+
         ch.pipeline()
                 .addLast("idleStateHandler", new IdleStateHandler(0 ,1 , 0, TimeUnit.SECONDS))
                 .addLast("LengthFieldBasedFrameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4, true))
                 .addLast("LengthFieldPrepender", new LengthFieldPrepender(4, 0))
-                .addLast("GlobalTrafficShapingHandler", new GlobalTrafficShapingHandler(ch.eventLoop().parent(), 50 * M, 50 * M))
+                .addLast("GlobalTrafficShapingHandler", globalTrafficShapingHandler)
                 .addLast("StringDecoder", new StringDecoder(utf8))
                 .addLast("StringEncoder", new StringEncoder(utf8))
-                .addLast(ch.eventLoop().parent() ,"myServerHandler", new MyServerHandlerForSolveOOM());
+                .addLast("myServerHandler", new MyServerHandlerForSolveOOM());
     }
 }
