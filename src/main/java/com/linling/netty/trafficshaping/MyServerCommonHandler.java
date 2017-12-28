@@ -1,8 +1,6 @@
 package com.linling.netty.trafficshaping;
 
 import io.netty.channel.*;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,7 +27,7 @@ public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<
               }
 
               long length = consumeMsgLength.getAndSet(0);
-              System.out.println("*** rate（KB/S）：" + (length));
+              System.out.println("*** rate（M/S）：" + (length / M));
           }
         };
         StringBuilder builder = new StringBuilder();
