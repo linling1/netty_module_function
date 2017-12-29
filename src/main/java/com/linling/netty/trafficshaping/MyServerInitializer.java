@@ -7,6 +7,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.traffic.GlobalTrafficShapingHandler;
 
@@ -21,17 +22,17 @@ public class MyServerInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
 
-        GlobalTrafficShapingHandler globalTrafficShapingHandler = new GlobalTrafficShapingHandler(ch.eventLoop().parent(), 50 * M, 50 * M);
+        GlobalTrafficShapingHandler globalTrafficShapingHandler = new GlobalTrafficShapingHandler(ch.eventLoop().parent(), 10 * M, 50 * M);
 //        globalTrafficShapingHandler.setMaxGlobalWriteSize(50 * M);
-        globalTrafficShapingHandler.setMaxWriteSize(30 * M);
+//        globalTrafficShapingHandler.setMaxWriteSize(5 * M);
 
         ch.pipeline()
                 .addLast("idleStateHandler", new IdleStateHandler(0 ,1 , 0, TimeUnit.SECONDS))
                 .addLast("LengthFieldBasedFrameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4, true))
                 .addLast("LengthFieldPrepender", new LengthFieldPrepender(4, 0))
                 .addLast("GlobalTrafficShapingHandler", globalTrafficShapingHandler)
-//                .addLast("chunkedWriteHandler", new ChunkedWriteHandler())
-//                .addLast("myServerChunkHandler", new MyServerChunkHandler())
+                .addLast("chunkedWriteHandler", new ChunkedWriteHandler())
+                .addLast("myServerChunkHandler", new MyServerChunkHandler())
                 .addLast("StringDecoder", new StringDecoder(utf8))
                 .addLast("StringEncoder", new StringEncoder(utf8))
                 .addLast("myServerHandler", new MyServerHandlerForPlain());

@@ -13,7 +13,6 @@ public class MyServerHandlerForSolveOOM extends MyServerCommonHandler {
     @Override
     protected void sentData(ChannelHandlerContext ctx) {
 
-//        new Thread(() -> {
             while (true) {
                 if(ctx.channel().isWritable()) {
                     System.out.println("===");
@@ -23,7 +22,6 @@ public class MyServerHandlerForSolveOOM extends MyServerCommonHandler {
                     break;
                 }
             }
-//        }).start();
     }
 
 

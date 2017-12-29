@@ -3,8 +3,11 @@ package com.linling.netty.trafficshaping;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.WriteBufferWaterMark;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+
+import static io.netty.channel.ChannelOption.WRITE_BUFFER_WATER_MARK;
 
 public class MyServer {
 

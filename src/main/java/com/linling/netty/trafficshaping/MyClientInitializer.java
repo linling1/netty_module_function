@@ -20,7 +20,7 @@ public class MyClientInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelTrafficShapingHandler channelTrafficShapingHandler = new ChannelTrafficShapingHandler(10 * M, 1 * M);
         ch.pipeline()
-//                .addLast("channelTrafficShapingHandler",channelTrafficShapingHandler)
+                .addLast("channelTrafficShapingHandler",channelTrafficShapingHandler)
                 .addLast("lengthFieldBasedFrameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4, true))
                 .addLast("lengthFieldPrepender", new LengthFieldPrepender(4, 0))
                 .addLast("stringDecoder", new StringDecoder(utf8))
