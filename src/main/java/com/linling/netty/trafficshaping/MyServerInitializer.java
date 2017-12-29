@@ -8,11 +8,9 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.traffic.GlobalTrafficShapingHandler;
 
 import java.nio.charset.Charset;
-import java.util.concurrent.TimeUnit;
 
 public class MyServerInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -27,7 +25,6 @@ public class MyServerInitializer extends ChannelInitializer<SocketChannel> {
 //        globalTrafficShapingHandler.setMaxWriteSize(5 * M);
 
         ch.pipeline()
-                .addLast("idleStateHandler", new IdleStateHandler(0 ,1 , 0, TimeUnit.SECONDS))
                 .addLast("LengthFieldBasedFrameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4, true))
                 .addLast("LengthFieldPrepender", new LengthFieldPrepender(4, 0))
                 .addLast("GlobalTrafficShapingHandler", globalTrafficShapingHandler)

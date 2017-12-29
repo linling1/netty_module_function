@@ -77,17 +77,6 @@ public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<
     }
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        /*if(evt instanceof IdleStateEvent) {
-            if(((IdleStateEvent) evt).state() == IdleState.WRITER_IDLE) {
-                System.out.println("##### WRITER_IDLE #####");
-            }
-        }*/
-
-        super.userEventTriggered(ctx, evt);
-    }
-
-    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         ctx.channel().close();
