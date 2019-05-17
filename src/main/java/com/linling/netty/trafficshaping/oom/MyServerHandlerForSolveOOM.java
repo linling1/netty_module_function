@@ -18,7 +18,7 @@ public class MyServerHandlerForSolveOOM extends MyServerCommonHandler {
                     System.out.println("===");
                     ctx.writeAndFlush(tempStr, getChannelProgressivePromise(ctx, null));
                 } else {
-                    System.out.println("#######");
+//                    System.out.println("#######");
                     break;
                 }
             }
@@ -31,7 +31,7 @@ public class MyServerHandlerForSolveOOM extends MyServerCommonHandler {
             System.out.println(" ###### 重新开始写数据 ######");
             sentData(ctx);
         } else {
-            System.out.println(" ===== 写操作暂停 =====");
+//            System.out.println(" ===== 写操作暂停 =====");
         }
     }
 }

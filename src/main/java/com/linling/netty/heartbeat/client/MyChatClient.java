@@ -47,7 +47,7 @@ public class MyChatClient {
             // ======= 说明 ========
 
             //192.168.1.102
-            client.remoteAddress(new InetSocketAddress("127.0.0.1", 5566));
+            client.remoteAddress(new InetSocketAddress("192.168.1.101", 5566));
             client.connect().addListener((ChannelFuture future) -> {
                 if(future.isSuccess()) {
 

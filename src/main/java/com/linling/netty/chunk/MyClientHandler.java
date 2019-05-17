@@ -56,7 +56,7 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String> {
                     future.cause().printStackTrace();
                 }
                 System.out.println("Time elapse:" + (System.currentTimeMillis() - tickCount));
-                sendData(ctx);
+//                sendData(ctx);
             }
         });
 

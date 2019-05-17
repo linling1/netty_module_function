@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<String> {
 
     protected final int M = 1024 * 1024;
+    protected final int KB = 1024;
     protected String tempStr;
     protected AtomicLong consumeMsgLength;
     protected Runnable counterTask;
@@ -27,7 +28,7 @@ public abstract class MyServerCommonHandler extends SimpleChannelInboundHandler<
               }
 
               long length = consumeMsgLength.getAndSet(0);
-              System.out.println("*** rate（M/S）：" + (length / M));
+              System.out.println("*** rate（KB/S）：" + (length / KB));
           }
         };
         StringBuilder builder = new StringBuilder();

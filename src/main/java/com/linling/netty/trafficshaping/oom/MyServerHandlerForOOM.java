@@ -15,8 +15,15 @@ public class MyServerHandlerForOOM extends MyServerCommonHandler {
 
         new Thread(() -> {
             while (true) {
+//                System.out.println("send msg");
                 ctx.writeAndFlush(tempStr, getChannelProgressivePromise(ctx, null));
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+//            ctx.writeAndFlush(tempStr, getChannelProgressivePromise(ctx, null));
         }).start();
 
     }

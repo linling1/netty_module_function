@@ -15,10 +15,10 @@ public class MyServerChunkHandler extends ChannelOutboundHandlerAdapter {
             ByteInputStream in = new ByteInputStream();
             byte[] data = null;
             if(buf.hasArray()) {
-//                System.out.println("+++ is array");
-                data = buf.array();
+                System.out.println("+++ is array");
+                data = buf.array().clone();
             } else {
-//                System.out.println("--- is direct");
+                System.out.println("--- is direct");
                 data = new byte[buf.readableBytes()];
                 buf.writeBytes(data);
 
@@ -27,28 +27,8 @@ public class MyServerChunkHandler extends ChannelOutboundHandlerAdapter {
             in.setBuf(data);
             ChunkedStream stream = new ChunkedStream(in);
 
-            ChannelProgressivePromise progressivePromise =  ctx.channel().newProgressivePromise();
-            progressivePromise.addListener(new ChannelProgressiveFutureListener(){
-                @Override
-                public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) throws Exception {
-                    if(promise instanceof ChannelProgressivePromise) {
-                        ((ChannelProgressivePromise)promise).tryProgress(progress, total);
-                    }
-                }
-
-                @Override
-                public void operationComplete(ChannelProgressiveFuture future) throws Exception {
-                    if(future.isSuccess()){
-                        promise.setSuccess();
-                    } else {
-                        promise.setFailure(future.cause());
-                    }
-                    System.out.println("数据已经发送完了！");
-                }
-            });
-
             ReferenceCountUtil.release(msg);
-            ctx.write(stream, progressivePromise);
+            ctx.write(stream, promise);
         } else {
             super.write(ctx, msg, promise);
         }

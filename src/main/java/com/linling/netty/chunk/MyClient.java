@@ -1,5 +1,6 @@
 package com.linling.netty.chunk;
 
+import com.linling.netty.trafficshaping.MyServerInitializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -16,7 +17,7 @@ public class MyClient {
             Bootstrap client = new Bootstrap();
             client.group(group).channel(NioSocketChannel.class).handler(new MyClientInitializer());
 
-            ChannelFuture channelFuture = client.connect("127.0.0.1", 8899).sync();
+            ChannelFuture channelFuture = client.connect("118.89.229.31", 8899).sync();
             channelFuture.channel().closeFuture().sync();
 
         } finally {
