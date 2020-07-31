@@ -36,7 +36,7 @@ public class MyChatDecoder extends ReplayingDecoder<ChatProtocolState> {
             case MESSAGE_PACKAGE:
                 length = parseMessage(ctx, in);
                 if(0 == length) {
-                    break ;
+                    break;
                 }
             case MESSAGE_DATA:
                 ByteBuf body = in.readBytes(length);

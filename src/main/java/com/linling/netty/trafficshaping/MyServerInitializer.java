@@ -34,8 +34,8 @@ public class MyServerInitializer extends ChannelInitializer<SocketChannel> {
                 .addLast("myServerChunkHandler", new MyServerChunkHandler())
                 .addLast("StringDecoder", new StringDecoder(utf8))
                 .addLast("StringEncoder", new StringEncoder(utf8))
-//                .addLast("myServerHandler", new MyServerHandlerForPlain());
+                .addLast("myServerHandler", new MyServerHandlerForPlain());
 //                .addLast("myServerHandler", new MyServerHandlerForOOM());
-                .addLast("myServerHandler", new MyServerHandlerForSolveOOM());
+//                .addLast("myServerHandler", new MyServerHandlerForSolveOOM());
     }
 }

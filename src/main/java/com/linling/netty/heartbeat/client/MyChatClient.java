@@ -1,6 +1,7 @@
 package com.linling.netty.heartbeat.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -34,7 +35,11 @@ public class MyChatClient {
 
     public void connect(EventLoopGroup group) {
         try{
-            executor = Executors.newSingleThreadExecutor();
+            if (null == executor) {
+                executor = Executors.newSingleThreadExecutor();
+                
+            }
+
             Bootstrap client = new Bootstrap();
             client.group(group).channel(NioSocketChannel.class).handler(new MyChatClientInitializer(this));
 
@@ -47,7 +52,7 @@ public class MyChatClient {
             // ======= 说明 ========
 
             //192.168.1.102
-            client.remoteAddress(new InetSocketAddress("192.168.1.101", 5566));
+            client.remoteAddress(new InetSocketAddress("127.0.0.1", 5566));
             client.connect().addListener((ChannelFuture future) -> {
                 if(future.isSuccess()) {
 
@@ -60,11 +65,12 @@ public class MyChatClient {
                     // ======= 说明 ========
 
                     if(printTask == null) {
-                        printTask = new PrintTask(future, bufferedReader);
+                        printTask = new PrintTask(future.channel(), bufferedReader);
+                        executor.submit(printTask);
                     } else {
-                        printTask.setFuture(future);
+                        printTask.setFuture(future.channel());
                     }
-                    executor.submit(printTask);
+
 
 
                 }
@@ -73,16 +79,18 @@ public class MyChatClient {
             e.printStackTrace();
         }
 
+        System.out.println("==============");
     }
 
     class PrintTask implements Runnable {
 
-        private volatile ChannelFuture future;
+//        private volatile ChannelFuture future;
+        private volatile Channel channel;
         private final BufferedReader bufferedReader;
 
-        public PrintTask(ChannelFuture future, BufferedReader bufferedReader) {
+        public PrintTask(Channel channel, BufferedReader bufferedReader) {
             this.bufferedReader = bufferedReader;
-            this.future = future;
+            this.channel = channel;
         }
 
         @Override
@@ -90,7 +98,7 @@ public class MyChatClient {
             while (true) {
                 try{
                     String line = bufferedReader.readLine();
-                    future.channel().writeAndFlush(line);
+                    channel.writeAndFlush(line);
                 } catch (Exception e) {
                     e.printStackTrace();
                     break;
@@ -98,8 +106,8 @@ public class MyChatClient {
             }
         }
 
-        public void setFuture(ChannelFuture future) {
-            this.future = future;
+        public void setFuture(Channel channel) {
+            this.channel = channel;
         }
     }
 }
