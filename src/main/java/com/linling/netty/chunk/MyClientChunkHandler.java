@@ -4,6 +4,7 @@ import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.*;
+import io.netty.handler.stream.ChunkedNioStream;
 import io.netty.handler.stream.ChunkedStream;
 import io.netty.util.ReferenceCountUtil;
 
@@ -29,8 +30,14 @@ public class MyClientChunkHandler extends ChannelOutboundHandlerAdapter {
             }
             System.out.println("===== data length : " + data.length);
             in.setBuf(data);
+
+            // 第一种方式：使用 byteBufInputStream
             ChunkedStream stream = new ChunkedStream(in);
 
+            // 第二种方式：使用 ByteBufInputStream
+//            ByteBufInputStream byteBufInputStream = new ByteBufInputStream(buf);
+//            ChunkedStream stream = new ChunkedStream(byteBufInputStream);
+            
             ChannelProgressivePromise progressivePromise =  ctx.channel().newProgressivePromise();
             progressivePromise.addListener(new ChannelProgressiveFutureListener(){
                 @Override

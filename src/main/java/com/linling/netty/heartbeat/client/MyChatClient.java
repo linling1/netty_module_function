@@ -37,7 +37,7 @@ public class MyChatClient {
         try{
             if (null == executor) {
                 executor = Executors.newSingleThreadExecutor();
-                
+
             }
 
             Bootstrap client = new Bootstrap();
